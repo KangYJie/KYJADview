@@ -10,7 +10,7 @@
 
 @interface KYJADViewController : UIViewController
 
-//链接
+
 @property (nonatomic, copy) NSString *adUrl;
 
 @end

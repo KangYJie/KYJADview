@@ -20,6 +20,9 @@ static NSString * const KYJAppVersion = @"Version";
 @property (nonatomic, strong) NSTimer *countTimer;
 @property (nonatomic, assign) int count;
 
+@property(nonatomic,strong)UIImageView *imageView;
+
+
 @end
 
 // 广告显示的时间
@@ -69,14 +72,14 @@ static int const showtime = 10;
         self.scrollView.contentSize = CGSizeMake(KYJscreenWight*self.imageNames.count, KYJscreenHight);
         [self addSubview:self.scrollView];
         for (int i=0; i<self.imageNames.count; i++) {
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(i*KYJscreenWight, 0, KYJscreenWight, KYJscreenHight)];
-            imageView.image = [UIImage imageNamed:self.imageNames[i]];
+            _imageView = [[UIImageView alloc] initWithFrame:CGRectMake(i*KYJscreenWight, 0, KYJscreenWight, KYJscreenHight)];
+            _imageView.image = [UIImage imageNamed:self.imageNames[i]];
             
             UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pushToAd)];
-            imageView.userInteractionEnabled = YES;
-            imageView.tag = i + 100000;
-            [imageView addGestureRecognizer:tap];
-            [self.scrollView addSubview:imageView];
+            _imageView.userInteractionEnabled = YES;
+//            imageView.tag = i + 100000;
+            [_imageView addGestureRecognizer:tap];
+            [self.scrollView addSubview:_imageView];
             if (i == self.imageNames.count - 1) {
                 if (!self.enterADdetiallviewHidden) {
                     UIButton *enterButton = [[UIButton alloc] initWithFrame:CGRectMake((KYJscreenWight-84), 30, 60, 30)];
@@ -88,8 +91,8 @@ static int const showtime = 10;
 
                     [enterButton addTarget:self action:@selector(enterAction) forControlEvents:UIControlEventTouchUpInside];
                     self.enterButton = enterButton;
-                    [imageView addSubview:enterButton];
-                    imageView.userInteractionEnabled = YES;
+                    [_imageView addSubview:enterButton];
+                    _imageView.userInteractionEnabled = YES;
                     
                     [self show];
 
@@ -98,10 +101,13 @@ static int const showtime = 10;
         }
         
         // pageControl
-        self.pageControl.numberOfPages = self.imageNames.count;
-        self.pageControl.pageIndicatorTintColor = self.pageControlNomalColor;
-        self.pageControl.currentPageIndicatorTintColor = self.pageControlSelectedColor;
-        [self addSubview:self.pageControl];
+        if (self.imageNames.count >1) {
+            
+            self.pageControl.numberOfPages = self.imageNames.count;
+            self.pageControl.pageIndicatorTintColor = self.pageControlNomalColor;
+            self.pageControl.currentPageIndicatorTintColor = self.pageControlSelectedColor;
+            [self addSubview:self.pageControl];
+        }
         
     } else {
         [self removeFromSuperview];
@@ -109,7 +115,7 @@ static int const showtime = 10;
 }
 
 //
-//是否更新版本
+//是否是新版本
 -(BOOL)isFirstLauch
 {
     NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
@@ -169,6 +175,7 @@ static int const showtime = 10;
 {
     _count --;
     [_enterButton setTitle:[NSString stringWithFormat:@"跳过%d",_count] forState:UIControlStateNormal];
+    NSLog(@"现在是=====%d秒",_count);
     if (_count == 0) {
         [self.countTimer invalidate];
         self.countTimer = nil;
@@ -178,8 +185,31 @@ static int const showtime = 10;
 //移除广告页
 -(void)hideGuidView
 {
-    [UIView animateWithDuration:0.3 animations:^{
-        self.alpha = 0;
+    [UIView animateWithDuration:3 animations:^{
+        
+        if (self.imageNames.count>1) {
+            self.alpha = 0.0;
+
+        } else {
+            //放大动画
+            CGRect frame = _imageView.frame;
+            frame.size.width = KYJscreenWight*1.3;
+            frame.size.height =KYJscreenHight*1.3;
+            _imageView.frame = frame;
+            _imageView.center = self.center;
+            _imageView.alpha = 0;
+            
+            CGRect frameenterButton = _enterButton.frame;
+            frameenterButton.size.height = 30*1.3;
+            frameenterButton.size.width  = 60*1.3;
+            frameenterButton.origin.x = (KYJscreenWight-84) + KYJscreenWight *0.15;
+            frameenterButton.origin.y = 30 - KYJscreenHight*0.3/2;
+            _enterButton.frame = frameenterButton;
+        }
+        
+        
+        
+        
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
     }];
@@ -228,6 +258,8 @@ static int const showtime = 10;
 {
     int cuttentIndex = (int)(scrollView.contentOffset.x + KYJscreenWight/2)/KYJscreenWight;
     self.pageControl.currentPage = cuttentIndex;
+    
+    NSLog(@"page==%d",cuttentIndex);
 }
 
 #pragma mark - KVO
