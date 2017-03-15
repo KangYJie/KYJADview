@@ -26,7 +26,7 @@ static NSString * const KYJAppVersion = @"Version";
 @end
 
 // 广告显示的时间
-static int const showtime = 10;
+static int const showtime = 5;
 @implementation KYJADview
 
 - (instancetype)initWithImageNames:(NSArray<NSString*> *)imageNames
@@ -84,7 +84,7 @@ static int const showtime = 10;
                 if (!self.enterADdetiallviewHidden) {
                     UIButton *enterButton = [[UIButton alloc] initWithFrame:CGRectMake((KYJscreenWight-84), 30, 60, 30)];
                     enterButton.titleLabel.font = [UIFont systemFontOfSize:15];
-                    [enterButton setTitle:[NSString stringWithFormat:@"跳过%d", 10] forState:UIControlStateNormal];
+                    [enterButton setTitle:[NSString stringWithFormat:@"跳过%d",showtime ] forState:UIControlStateNormal];
                     [enterButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
                     enterButton.backgroundColor = [UIColor colorWithRed:38 /255.0 green:38 /255.0 blue:38 /255.0 alpha:0.6];
                     enterButton.layer.cornerRadius = 4;
@@ -207,8 +207,20 @@ static int const showtime = 10;
 //            _enterButton.frame = frameenterButton;
             
             _imageView.transform = CGAffineTransformMakeScale(2.3, 2.3);
-                        _imageView.alpha = 0;
 
+            
+            [UIView animateWithDuration:3 animations:^{
+
+                
+                CGAffineTransform transform1 = CGAffineTransformMakeRotation(M_PI);
+                CGAffineTransform transform2 = CGAffineTransformScale(transform1, 0.5, 0.5);
+                _imageView.transform = transform2;
+
+                
+            } completion:^(BOOL finished) {
+                _imageView.alpha = 0.1;
+
+            }];
             
         }
         
@@ -216,8 +228,6 @@ static int const showtime = 10;
         
         
     } completion:^(BOOL finished) {
-        
-        
         [self removeFromSuperview];
     }];
 }
