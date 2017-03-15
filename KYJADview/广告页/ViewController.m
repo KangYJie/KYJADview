@@ -30,8 +30,8 @@
     [self.view addSubview:imageview];
     
     
-//   KYJADview * ADview =   [KYJADview showADviewWithimages:@[@"1384"]];
-    KYJADview * ADview =   [KYJADview showADviewWithimages:@[@"1384",@"1384",@"1384"]];
+   KYJADview * ADview =   [KYJADview showADviewWithimages:@[@"1384"]];
+//    KYJADview * ADview =   [KYJADview showADviewWithimages:@[@"1384",@"1384",@"1384"]];
 
     ADview.pageControlSelectedColor = [UIColor redColor];
     ADview.pageControlNomalColor    = [UIColor orangeColor];

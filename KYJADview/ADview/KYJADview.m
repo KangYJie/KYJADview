@@ -192,28 +192,50 @@ static int const showtime = 10;
 
         } else {
             //放大动画
-            CGRect frame = _imageView.frame;
-            frame.size.width = KYJscreenWight*1.3;
-            frame.size.height =KYJscreenHight*1.3;
-            _imageView.frame = frame;
-            _imageView.center = self.center;
-            _imageView.alpha = 0;
+//            CGRect frame = _imageView.frame;
+//            frame.size.width = KYJscreenWight*1.3;
+//            frame.size.height =KYJscreenHight*1.3;
+//            _imageView.frame = frame;
+//            _imageView.center = self.center;
+//            _imageView.alpha = 0;
+//            
+//            CGRect frameenterButton = _enterButton.frame;
+//            frameenterButton.size.height = 30*1.3;
+//            frameenterButton.size.width  = 60*1.3;
+//            frameenterButton.origin.x = (KYJscreenWight-84) + KYJscreenWight *0.15;
+//            frameenterButton.origin.y = 30 - KYJscreenHight*0.3/2;
+//            _enterButton.frame = frameenterButton;
             
-            CGRect frameenterButton = _enterButton.frame;
-            frameenterButton.size.height = 30*1.3;
-            frameenterButton.size.width  = 60*1.3;
-            frameenterButton.origin.x = (KYJscreenWight-84) + KYJscreenWight *0.15;
-            frameenterButton.origin.y = 30 - KYJscreenHight*0.3/2;
-            _enterButton.frame = frameenterButton;
+            _imageView.transform = CGAffineTransformMakeScale(2.3, 2.3);
+                        _imageView.alpha = 0;
+
+            
         }
         
         
         
         
     } completion:^(BOOL finished) {
+        
+        
         [self removeFromSuperview];
     }];
 }
+
+- (void) shakeToShow:(UIView*)aView{
+    CAKeyframeAnimation* animation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    animation.duration = 0.5;
+    
+    NSMutableArray *values = [NSMutableArray array];
+    [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.1, 0.1, 1.0)]];
+    [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(1.2, 1.2, 1.0)]];
+    [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.9, 0.9, 1.0)]];
+    [values addObject:[NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0, 1.0, 1.0)]];
+    animation.values = values;
+    [aView.layer addAnimation:animation forKey:nil];
+}
+
+
 //判断
 -(BOOL)isScrolltoLeft:(UIScrollView *)scrollView
 {
